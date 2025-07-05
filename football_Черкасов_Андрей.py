@@ -1,0 +1,172 @@
+from tkinter import *
+from tkinter import ttk
+y=1
+x=1
+d2=False
+d3=False
+m=1
+a=5
+a2=5
+play=False
+score_1=0
+score_2=0
+n=True
+c="Начние игру нажав на кнопку PLAY"
+c2="Это игра футбол"
+c3="Ты управляешь персонажами клавишами WASD и стрелками"
+c4="Побеждает игрок,который первым забивает 2 гола"
+c5=""
+def start_moving():
+    global y, x, obj, stext, d2, d3, obj2, cnv, obj3, m, a, a2, obj4, obj5, obj6, obj7, score_1, score, score_2, play, q, q1, q2, q3, q4, c5
+    if cnv.coords(obj)[0]<0 or cnv.coords(obj)[2]>800:
+        x*=-1
+    if cnv.coords(obj)[1]<0 or cnv.coords(obj)[1]>=800-25:
+        y*=-1
+    x1, y1, x2, y2=cnv.coords(obj2)
+    p=cnv.find_overlapping(x1, y1, x2, y2)
+    if obj in p:
+        d2=True
+    else:
+        d2=False
+    x1, y1, x2, y2=cnv.coords(obj3)
+    p2=cnv.find_overlapping(x1, y1, x2, y2)
+    if obj in p2:
+        d3=True
+    else:
+        d3=False
+    if d2==False:
+       a=8
+    else:
+       a=5
+    if d3==False:
+       a2=8
+    else:
+       a2=5
+    x1, y1, x2, y2=cnv.coords(obj)
+    p3=cnv.find_overlapping(x1, y1, x2, y2)
+    if obj7 in p3:
+       score_2+=1
+       cnv.delete(score)
+       score=cnv.create_text(400, 300, text = str(score_1)+":"+str(score_2), font=200)
+       cnv.delete(obj)
+       obj = cnv.create_oval(385, 285, 415, 315, fill = "magenta", outline="magenta")
+       cnv.delete(obj2)
+       cnv.delete(obj3)
+       obj2 = cnv.create_rectangle(385, 160, 415, 190, fill = "White", outline="White")
+       obj3 = cnv.create_rectangle(385, 410, 415, 440, fill = "aqua", outline="aqua")
+    if obj6 in p3:
+       score_1+=1
+       cnv.delete(score)
+       score=cnv.create_text(400, 300, text = str(score_1)+":"+str(score_2), font=200)
+       cnv.delete(obj)
+       obj = cnv.create_oval(385, 285, 415, 315, fill = "magenta", outline="magenta")
+       cnv.delete(obj2)
+       cnv.delete(obj3)
+       obj2 = cnv.create_rectangle(385, 160, 415, 190, fill = "White", outline="White")
+       obj3 = cnv.create_rectangle(385, 410, 415, 440, fill = "aqua", outline="aqua")
+    if score_1==2 or score_2==2:
+       play=False
+       if score_1==2:
+          c5="Выиграл игрок управляющий WASD"
+       else:
+          c5="Выиграл игрок управляющий стрелками"
+       score_1=0
+       score_2=0
+       cnv.delete(obj)
+       cnv.delete(score)
+       score=cnv.create_text(400, 300, text = str(score_1)+":"+str(score_2), font=200)
+       obj = cnv.create_oval(385, 285, 415, 315, fill = "magenta", outline="magenta")
+       cnv.delete(obj2)
+       cnv.delete(obj3)
+       obj2 = cnv.create_rectangle(385, 160, 415, 190, fill = "White", outline="White")
+       obj3 = cnv.create_rectangle(385, 410, 415, 440, fill = "aqua", outline="aqua")
+       q=cnv.create_text(400, 400, text = c, font=200)
+       q1=cnv.create_text(400, 340, text = c2, font=200)
+       q2=cnv.create_text(400, 360, text = c3, font=200)
+       q3=cnv.create_text(400, 380, text = c4, font=200)
+       q4=cnv.create_text(400, 320, text = c5, font=200)
+def start2():
+    global play, n
+    if n==True:
+        moving()
+    if play==False:
+        play=True
+        n=False
+        cnv.delete(q)
+        cnv.delete(q1)
+        cnv.delete(q2)
+        cnv.delete(q3)
+        cnv.delete(q4)
+def move(object, deltax, deltay):
+   global cnv
+   cnv.move(object, deltax, deltay)
+   start_moving()
+def moving():
+    global play, a, a2
+    if play==True:
+        if "Right" in keys:
+          move(obj2, a, 0)
+        if "Left" in keys:
+          move(obj2, -a, 0)
+        if "Up" in keys:
+          move(obj2, 0, -a)
+        if "Down" in keys:
+          move(obj2, 0, a)
+    if play==True:
+        if "d" in keys:
+          move(obj3, a2, 0)
+        if "a" in keys:
+          move(obj3, -a2, 0)
+        if "w" in keys:
+          move(obj3, 0, -a2)
+        if "s" in keys:
+          move(obj3, 0, a2)
+    if d2==True and play==True:
+        if "Right" in keys:
+          move(obj, a, 0)
+        if "Left" in keys:
+          move(obj, -a, 0)
+        if "Up" in keys:
+          move(obj, 0, -a)
+        if "Down" in keys:
+          move(obj, 0, a)
+    if d3==True and play==True:
+        if "d" in keys:
+          move(obj, a2, 0)
+        if "a" in keys:
+          move(obj, -a2, 0)
+        if "w" in keys:
+          move(obj, 0, -a2)
+        if "s" in keys:
+          move(obj, 0, a2)
+    cnv.after(50,moving)
+def delete_oval():
+    cnv.delete(obj)
+    cnv.after(3000,show_oval)
+def show_oval():
+    global obj
+    obj = cnv.create_oval(35, 35, 65, 65, fill = "yellow")
+    cnv.after(3000,delete_oval)
+def key_pressed(event):
+   keys.add(event.keysym)
+def key_released(event):
+   keys.remove(event.keysym)
+w = Tk()
+cnv = Canvas(bg = "lawngreen", width = 800, height = 600)
+cnv.pack()
+keys=set()
+b1 = ttk.Button(text = "PLAY", command = start2)
+b1.pack(expand = True)
+obj2 = cnv.create_rectangle(385, 160, 415, 190, fill = "White", outline="White")
+obj3 = cnv.create_rectangle(385, 410, 415, 440, fill = "aqua", outline="aqua")
+obj6 = cnv.create_rectangle(300, 0, 500, 20, fill = "silver", outline="silver")
+obj7 = cnv.create_rectangle(300, 580, 500, 600, fill = "silver", outline="silver")
+obj = cnv.create_oval(385, 285, 415, 315, fill = "magenta", outline="magenta")
+score=cnv.create_text(400, 300, text = str(score_1)+":"+str(score_2), font=200)
+q=cnv.create_text(400, 400, text = c, font=200)
+q1=cnv.create_text(400, 340, text = c2, font=200)
+q2=cnv.create_text(400, 360, text = c3, font=200)
+q3=cnv.create_text(400, 380, text = c4, font=200)
+w.bind("<KeyPress>", key_pressed)
+w.bind("<KeyRelease>", key_released)
+w.mainloop()
