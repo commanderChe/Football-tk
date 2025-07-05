@@ -1,2 +1,2 @@
 # Football-tk
-Football game on TK(tkinter)
+Football game on  python and TK(tkinter)
